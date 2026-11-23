@@ -1,4 +1,4 @@
-CYBERSECURITY GOVERNANCE FOR CRITICAL INFRASTRUCTURE IN AI-DRIVEN ECONOMIESResearch Monograph 06-X | CyberSeal6X Research Press
+CYBERSECURITY GOVERNANCE FOR CRITICAL INFRASTRUCTURE IN AI-DRIVEN ECONOMIES Research Monograph 06-X | CyberSeal6X Research Press
 
 Authored by Gopal Karamchand and Praveen Kumar Nakkalapally, this 338-page hardcover treatise defines the operational standard for sovereign and enterprise defense in an era of autonomous, machine-speed threats. Built for Chief Information Security Officers, national security architects, and corporate boards, Research Monograph 06-X replaces legacy compliance checklists and speculative cyber-hype with rigorous, quantitative governance doctrine.
 
