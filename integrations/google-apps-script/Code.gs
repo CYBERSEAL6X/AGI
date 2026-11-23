@@ -38,7 +38,7 @@ function createResultPage(requestId, ok) {
     requestId: requestId,
     ok: ok
   });
-  const html = '<!doctype html><script>window.parent.postMessage(' +
+  const html = '<!doctype html><script>window.top.postMessage(' +
     message + ', "*");</script>';
 
   return HtmlService.createHtmlOutput(html)

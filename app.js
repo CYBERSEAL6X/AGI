@@ -296,56 +296,137 @@ function initDownloadAnalytics() {
 }
 
 // 4. INSTITUTIONAL DOWNLOAD FORM HANDLER
+const LEAD_CAPTURE_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxIv7OEPJHIGIlyUlFegc8ws85zMCjyEKIQICjDbu9PcRxLieCPn_1n79UlZUCOmdYM/exec';
+const LEAD_CAPTURE_ORIGIN_PATTERN = /^https:\/\/(?:script\.google\.com|(?:[a-z0-9-]+-)?script\.googleusercontent\.com)$/;
+
+function submitInstitutionalLead({ name, organization, email }) {
+  return new Promise((resolve, reject) => {
+    const requestId = window.crypto.randomUUID().replace(/-/g, '');
+    const frame = document.createElement('iframe');
+    const submission = document.createElement('form');
+
+    frame.name = `lead-submit-${requestId}`;
+    frame.title = 'Lead submission response';
+    frame.style.display = 'none';
+
+    submission.method = 'POST';
+    submission.action = LEAD_CAPTURE_ENDPOINT;
+    submission.target = frame.name;
+    submission.hidden = true;
+
+    const fields = { name, organization, email, requestId, website: '' };
+    Object.entries(fields).forEach(([fieldName, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = fieldName;
+      input.value = value;
+      submission.append(input);
+    });
+
+    let timeoutId;
+    const cleanup = () => {
+      window.removeEventListener('message', onMessage);
+      window.clearTimeout(timeoutId);
+      frame.remove();
+      submission.remove();
+    };
+
+    const onMessage = (event) => {
+      if (!LEAD_CAPTURE_ORIGIN_PATTERN.test(event.origin) ||
+          !event.data ||
+          event.data.type !== 'website-lead-result' ||
+          event.data.requestId !== requestId) {
+        return;
+      }
+
+      cleanup();
+      if (event.data.ok === true) {
+        resolve();
+      } else {
+        reject(new Error('The lead endpoint rejected the submission.'));
+      }
+    };
+
+    window.addEventListener('message', onMessage);
+    timeoutId = window.setTimeout(() => {
+      cleanup();
+      reject(new Error('Timed out waiting for the lead endpoint.'));
+    }, 30000);
+
+    document.body.append(frame, submission);
+    try {
+      submission.submit();
+    } catch (error) {
+      cleanup();
+      reject(error);
+    }
+  });
+}
+
 function initAcquisitionForm() {
   const form = document.getElementById('institutionalDownloadForm');
   const resultBox = document.getElementById('institutionalResultBox');
   if (!form || !resultBox) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById('acqName').value.trim() || 'Executive';
-    const org = document.getElementById('acqOrg').value.trim() || 'Organization';
+    const name = document.getElementById('acqName').value.trim();
+    const organization = document.getElementById('acqOrg').value.trim();
+    const email = document.getElementById('acqEmail').value.trim();
+    const submitButton = form.querySelector('button[type="submit"]');
 
-    const card = document.createElement('div');
-    card.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.2); padding: 24px; border-radius: 4px; margin-top: 20px;';
-
-    const status = document.createElement('div');
-    status.style.cssText = 'font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-steel); margin-bottom: 8px;';
-    status.textContent = 'PDF ACCESS LINK READY';
-
-    const heading = document.createElement('h4');
-    heading.style.cssText = 'font-size: 1.1rem; color: #ffffff; margin-bottom: 8px;';
-    heading.textContent = `Complimentary copy for ${name} (${org})`;
-
-    const description = document.createElement('p');
-    description.style.cssText = 'font-size: 0.9rem; color: #94a3b8; margin-bottom: 20px; line-height: 1.6;';
-    description.textContent = 'This site does not store or send the information entered in this form. Open the PDF directly in Google Drive.';
-
-    const actions = document.createElement('div');
-    actions.style.cssText = 'display: flex; gap: 14px; flex-wrap: wrap;';
-
-    const downloadLink = document.createElement('a');
-    downloadLink.href = 'https://drive.google.com/file/d/1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J/view?usp=drive_link';
-    downloadLink.target = '_blank';
-    downloadLink.rel = 'noopener noreferrer';
-    downloadLink.dataset.gaDownload = '';
-    downloadLink.className = 'btn-hero-primary';
-    downloadLink.style.cssText = 'padding: 12px 24px; font-size: 0.88rem;';
-    downloadLink.textContent = 'DOWNLOAD COMPLETE PDF (GOOGLE DRIVE)';
-
-    const readerButton = document.createElement('button');
-    readerButton.type = 'button';
-    readerButton.className = 'btn-hero-secondary';
-    readerButton.style.cssText = 'padding: 12px 20px; font-size: 0.88rem;';
-    readerButton.textContent = 'READ IN BROWSER';
-    readerButton.addEventListener('click', () => openReaderModal(0));
-
-    actions.append(downloadLink, readerButton);
-    card.append(status, heading, description, actions);
-    resultBox.replaceChildren(card);
-
+    submitButton.disabled = true;
     resultBox.style.display = 'block';
+    resultBox.textContent = 'Submitting your request...';
+
+    try {
+      await submitInstitutionalLead({ name, organization, email });
+
+      const card = document.createElement('div');
+      card.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.2); padding: 24px; border-radius: 4px; margin-top: 20px;';
+
+      const status = document.createElement('div');
+      status.style.cssText = 'font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-steel); margin-bottom: 8px;';
+      status.textContent = 'REQUEST RECEIVED';
+
+      const heading = document.createElement('h4');
+      heading.style.cssText = 'font-size: 1.1rem; color: #ffffff; margin-bottom: 8px;';
+      heading.textContent = `Complimentary copy for ${name} (${organization})`;
+
+      const description = document.createElement('p');
+      description.style.cssText = 'font-size: 0.9rem; color: #94a3b8; margin-bottom: 20px; line-height: 1.6;';
+      description.textContent = 'Your details were submitted. Open the PDF directly in Google Drive.';
+
+      const actions = document.createElement('div');
+      actions.style.cssText = 'display: flex; gap: 14px; flex-wrap: wrap;';
+
+      const downloadLink = document.createElement('a');
+      downloadLink.href = 'https://drive.google.com/file/d/1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J/view?usp=drive_link';
+      downloadLink.target = '_blank';
+      downloadLink.rel = 'noopener noreferrer';
+      downloadLink.dataset.gaDownload = '';
+      downloadLink.className = 'btn-hero-primary';
+      downloadLink.style.cssText = 'padding: 12px 24px; font-size: 0.88rem;';
+      downloadLink.textContent = 'DOWNLOAD COMPLETE PDF (GOOGLE DRIVE)';
+
+      const readerButton = document.createElement('button');
+      readerButton.type = 'button';
+      readerButton.className = 'btn-hero-secondary';
+      readerButton.style.cssText = 'padding: 12px 20px; font-size: 0.88rem;';
+      readerButton.textContent = 'READ IN BROWSER';
+      readerButton.addEventListener('click', () => openReaderModal(0));
+
+      actions.append(downloadLink, readerButton);
+      card.append(status, heading, description, actions);
+      resultBox.replaceChildren(card);
+      form.reset();
+    } catch (error) {
+      console.error('Institutional lead submission failed:', error);
+      resultBox.textContent = 'We could not confirm that your request was received. Please wait a moment before trying again, or contact us if this continues.';
+    } finally {
+      submitButton.disabled = false;
+    }
   });
 }
 
