@@ -306,29 +306,44 @@ function initAcquisitionForm() {
 
     const name = document.getElementById('acqName').value.trim() || 'Executive';
     const org = document.getElementById('acqOrg').value.trim() || 'Organization';
-    const email = document.getElementById('acqEmail').value.trim();
 
-    resultBox.innerHTML = `
-      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.2); padding: 24px; border-radius: 4px; margin-top: 20px;">
-        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-steel); margin-bottom: 8px;">
-          ✓ INSTITUTIONAL CLEARANCE GRANTED // DISPATCH VERIFIED
-        </div>
-        <h4 style="font-size: 1.1rem; color: #ffffff; margin-bottom: 8px;">
-          Access Approved for ${name} (${org})
-        </h4>
-        <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 20px; line-height: 1.6;">
-          Your institutional complimentary copy of <em>Cybersecurity Governance for Critical Infrastructure in AI-Driven Economies</em> (338 Pages) is ready for immediate download.
-        </p>
-        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <a href="https://drive.google.com/file/d/1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J/view?usp=drive_link" target="_blank" rel="noopener noreferrer" data-ga-download class="btn-hero-primary" style="padding: 12px 24px; font-size: 0.88rem;">
-            DOWNLOAD COMPLETE PDF (GOOGLE DRIVE)
-          </a>
-          <button type="button" onclick="openReaderModal(0)" class="btn-hero-secondary" style="padding: 12px 20px; font-size: 0.88rem;">
-            READ IN BROWSER
-          </button>
-        </div>
-      </div>
-    `;
+    const card = document.createElement('div');
+    card.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.2); padding: 24px; border-radius: 4px; margin-top: 20px;';
+
+    const status = document.createElement('div');
+    status.style.cssText = 'font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-steel); margin-bottom: 8px;';
+    status.textContent = 'PDF ACCESS LINK READY';
+
+    const heading = document.createElement('h4');
+    heading.style.cssText = 'font-size: 1.1rem; color: #ffffff; margin-bottom: 8px;';
+    heading.textContent = `Complimentary copy for ${name} (${org})`;
+
+    const description = document.createElement('p');
+    description.style.cssText = 'font-size: 0.9rem; color: #94a3b8; margin-bottom: 20px; line-height: 1.6;';
+    description.textContent = 'This site does not store or send the information entered in this form. Open the PDF directly in Google Drive.';
+
+    const actions = document.createElement('div');
+    actions.style.cssText = 'display: flex; gap: 14px; flex-wrap: wrap;';
+
+    const downloadLink = document.createElement('a');
+    downloadLink.href = 'https://drive.google.com/file/d/1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J/view?usp=drive_link';
+    downloadLink.target = '_blank';
+    downloadLink.rel = 'noopener noreferrer';
+    downloadLink.dataset.gaDownload = '';
+    downloadLink.className = 'btn-hero-primary';
+    downloadLink.style.cssText = 'padding: 12px 24px; font-size: 0.88rem;';
+    downloadLink.textContent = 'DOWNLOAD COMPLETE PDF (GOOGLE DRIVE)';
+
+    const readerButton = document.createElement('button');
+    readerButton.type = 'button';
+    readerButton.className = 'btn-hero-secondary';
+    readerButton.style.cssText = 'padding: 12px 20px; font-size: 0.88rem;';
+    readerButton.textContent = 'READ IN BROWSER';
+    readerButton.addEventListener('click', () => openReaderModal(0));
+
+    actions.append(downloadLink, readerButton);
+    card.append(status, heading, description, actions);
+    resultBox.replaceChildren(card);
 
     resultBox.style.display = 'block';
   });
@@ -381,6 +396,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initDownloadAnalytics();
   initAcquisitionForm();
   initBriefingForm();
+  const readerCloseButton = document.getElementById('readerModalClose');
+  if (readerCloseButton) readerCloseButton.addEventListener('click', closeReaderModal);
 
   // Close reader modal on Escape key
   document.addEventListener('keydown', (e) => {
