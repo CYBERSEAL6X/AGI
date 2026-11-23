@@ -15,7 +15,7 @@ This platform represents the tier-1 institutional defense overhaul for **CyberSe
 
 ---
 
-## 🏛️ PALANTIR / ANDURIL DEFENSE-TECH DESIGN STANDARD
+## 🏛️ DEFENSE-TECH DESIGN STANDARD
 
 To eliminate all arcade, hacker, and juvenile tropes, the platform was re-engineered under the design language of tier-1 global defense primes:
 
@@ -27,16 +27,4 @@ To eliminate all arcade, hacker, and juvenile tropes, the platform was re-engine
 6. **Institutional Complimentary Access ($49 List → $0.00)**: Positioned as an authorized national security subsidy funded by the CyberSeal6X Defense Initiative to inoculate global critical infrastructure against adversarial state threat actors.
 
 ---
-
-## ⚡ QUICK START / LOCAL RUN
-
-Since your server is already running, simply refresh your browser tab at:
-👉 **`http://localhost:8080/`**
-
-Or start anytime from PowerShell:
-```powershell
-python -m http.server 8080
-```
-
----
-*Authorized by CyberSeal6X Strategic Defense Initiative // Hotline: +1 936-866-9999 // security@cyberseal6x.com*
+*Authorized by CyberSeal6X Strategic Initiative // Hotline: +1 936-866-9999 // security@cyberseal6x.com*
