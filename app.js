@@ -266,7 +266,7 @@ function openReaderModal(idx = 0) {
           Complete mathematical verifications, regulatory audit matrices, and red-team runbooks.
         </p>
       </div>
-      <a href="https://drive.google.com/file/d/1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="btn-hero-primary" style="padding: 12px 24px; font-size: 0.88rem;">
+      <a href="https://drive.google.com/file/d/1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J/view?usp=drive_link" target="_blank" rel="noopener noreferrer" data-ga-download class="btn-hero-primary" style="padding: 12px 24px; font-size: 0.88rem;">
         DOWNLOAD COMPLETE PDF (GOOGLE DRIVE)
       </a>
     </div>
@@ -278,6 +278,21 @@ function openReaderModal(idx = 0) {
 function closeReaderModal() {
   const modal = document.getElementById('readerModalOverlay');
   if (modal) modal.classList.remove('active');
+}
+
+function initDownloadAnalytics() {
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element)) return;
+
+    const link = event.target.closest('a[data-ga-download]');
+    if (!link) return;
+
+    window.gtag('event', 'download_link_click', {
+      file_name: 'CyberSeal6X Master Treatise',
+      file_extension: 'pdf',
+      link_url: link.href
+    });
+  });
 }
 
 // 4. INSTITUTIONAL DOWNLOAD FORM HANDLER
@@ -305,7 +320,7 @@ function initAcquisitionForm() {
           Your institutional complimentary copy of <em>Cybersecurity Governance for Critical Infrastructure in AI-Driven Economies</em> (338 Pages) is ready for immediate download.
         </p>
         <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <a href="https://drive.google.com/file/d/1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="btn-hero-primary" style="padding: 12px 24px; font-size: 0.88rem;">
+          <a href="https://drive.google.com/file/d/1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J/view?usp=drive_link" target="_blank" rel="noopener noreferrer" data-ga-download class="btn-hero-primary" style="padding: 12px 24px; font-size: 0.88rem;">
             DOWNLOAD COMPLETE PDF (GOOGLE DRIVE)
           </a>
           <button type="button" onclick="openReaderModal(0)" class="btn-hero-secondary" style="padding: 12px 20px; font-size: 0.88rem;">
@@ -331,17 +346,31 @@ function initBriefingForm() {
     const officer = document.getElementById('briefingOfficer').value.trim();
     const email = document.getElementById('briefingEmail').value.trim();
     const practice = document.getElementById('briefingPractice').value;
+    const scope = document.getElementById('briefingScope').value.trim();
+    const subject = `Confidential CISO briefing inquiry - ${officer}`;
+    const body = [
+      'Confidential CISO Briefing Inquiry',
+      '',
+      `Officer / Executive Name: ${officer}`,
+      `Enterprise Email: ${email}`,
+      `Practice Area: ${practice}`,
+      `Operational Scope & Context: ${scope || 'Not provided'}`
+    ].join('\n');
+    const mailtoUrl = `mailto:security@cyberseal6x.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    msgEl.innerHTML = `
-      <div style="background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.25); color: #e2e8f0; padding: 18px 24px; border-radius: 4px; font-size: 0.92rem; margin-top: 18px; line-height: 1.6;">
-        <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-steel); display: block; margin-bottom: 4px;">
-          CONFIDENTIAL INQUIRY RECORDED
-        </span>
-        Thank you, <strong>${officer}</strong>. Your executive briefing request regarding <strong>${practice}</strong> has been routed to our senior architecture partners. A confirmation dossier has been sent to <strong>${email}</strong>. Our direct executive line is available at <strong>+1 936-866-9999</strong>.
-      </div>
-    `;
+    msgEl.replaceChildren();
+    const status = document.createElement('div');
+    status.style.cssText = 'background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.25); color: #e2e8f0; padding: 18px 24px; border-radius: 4px; font-size: 0.92rem; margin-top: 18px; line-height: 1.6;';
+    status.append('Your default email app (such as Outlook) should open with a draft addressed to security@cyberseal6x.com. Review and send it to submit your inquiry. If it did not open, ');
 
-    form.reset();
+    const fallbackLink = document.createElement('a');
+    fallbackLink.href = mailtoUrl;
+    fallbackLink.textContent = 'open the email draft';
+    fallbackLink.style.color = 'var(--accent-steel)';
+    status.append(fallbackLink);
+    msgEl.append(status);
+
+    window.location.href = mailtoUrl;
   });
 }
 
@@ -349,6 +378,7 @@ function initBriefingForm() {
 document.addEventListener('DOMContentLoaded', () => {
   initRiskMatrix();
   renderCurriculum();
+  initDownloadAnalytics();
   initAcquisitionForm();
   initBriefingForm();
 
