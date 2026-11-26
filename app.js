@@ -266,7 +266,7 @@ function openReaderModal(idx = 0) {
           Complete mathematical verifications, regulatory audit matrices, and red-team runbooks.
         </p>
       </div>
-      <a href="https://drive.google.com/file/d/1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J/view?usp=drive_link" target="_blank" rel="noopener noreferrer" data-ga-download class="btn-hero-primary" style="padding: 12px 24px; font-size: 0.88rem;">
+      <a href="https://drive.google.com/uc?export=download&id=1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J" target="_blank" rel="noopener noreferrer" data-ga-download class="btn-hero-primary" style="padding: 12px 24px; font-size: 0.88rem;">
         DOWNLOAD COMPLETE PDF (GOOGLE DRIVE)
       </a>
     </div>
@@ -287,10 +287,13 @@ function initDownloadAnalytics() {
     const link = event.target.closest('a[data-ga-download]');
     if (!link) return;
 
-    window.gtag('event', 'download_link_click', {
+    window.gtag('event', 'file_download', {
       file_name: 'CyberSeal6X Master Treatise',
       file_extension: 'pdf',
-      link_url: link.href
+      link_url: link.href,
+      link_domain: new URL(link.href).hostname,
+      link_text: link.textContent.trim(),
+      transport_type: 'beacon'
     });
   });
 }
@@ -402,7 +405,7 @@ function initAcquisitionForm() {
       actions.style.cssText = 'display: flex; gap: 14px; flex-wrap: wrap;';
 
       const downloadLink = document.createElement('a');
-      downloadLink.href = 'https://drive.google.com/file/d/1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J/view?usp=drive_link';
+      downloadLink.href = 'https://drive.google.com/uc?export=download&id=1yc-cYgywfpzJYTEgoiM4p1EncVQMCX3J';
       downloadLink.target = '_blank';
       downloadLink.rel = 'noopener noreferrer';
       downloadLink.dataset.gaDownload = '';

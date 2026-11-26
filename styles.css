@@ -1420,14 +1420,253 @@ body {
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .metrics-inner { flex-wrap: wrap; gap: 20px; justify-content: center; }
   .metrics-divider { display: none; }
+  .nav-links { gap: 18px; }
+  .nav-actions { gap: 8px; }
+  .btn-nav-solid, .btn-nav-outline { padding-left: 12px; padding-right: 12px; }
 }
 
 @media (max-width: 768px) {
-  .hero-title { font-size: 2.5rem; }
+  html { font-size: 16px; }
+  .institutional-top-bar {
+    min-height: 44px;
+    padding: 8px 16px;
+  }
+  .institutional-top-bar .top-bar-left {
+    width: 100%;
+  }
+  .institutional-top-bar .top-bar-left > span:nth-child(2),
+  .institutional-top-bar .top-bar-left > span:last-child,
+  .top-bar-right { display: none; }
+  .top-bar-logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .main-nav { padding: 14px 0; }
+  .nav-wrap { gap: 12px; }
+  .brand-mark { gap: 10px; }
+  .brand-logo-img {
+    width: 48px;
+    height: 48px;
+  }
+  .brand-name { font-size: 1.05rem; }
+  .brand-descriptor { font-size: 0.58rem; }
+  .top-bar-right, .nav-links, .nav-actions { display: none; }
+
+  .container { padding-left: 16px; padding-right: 16px; }
+  .metrics-strip { padding: 16px 0; }
+  .metrics-inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 8px;
+  }
+  .metric-stat:last-child {
+    grid-column: 1 / -1;
+  }
+  .metric-stat-num { font-size: 1.15rem; }
+  .metric-stat-label {
+    max-width: 150px;
+    text-align: center;
+    font-size: 0.58rem;
+  }
+
+  .hero-section {
+    padding: 56px 0 64px;
+  }
+  .hero-grid {
+    gap: 40px;
+  }
+  .monograph-label {
+    justify-content: center;
+    max-width: 100%;
+    margin-bottom: 20px;
+    font-size: 0.62rem;
+  }
+  .hero-title {
+    font-size: clamp(2rem, 9vw, 2.5rem);
+    line-height: 1.12;
+    margin-bottom: 20px;
+  }
+  .hero-meta-strip {
+    gap: 8px;
+    font-size: 0.72rem;
+  }
+  .hero-prose {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    justify-content: center;
+    width: 100%;
+    min-height: 52px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .hero-social-proof {
+    flex-wrap: wrap;
+    font-size: 0.72rem;
+  }
+
+  .hardcover-volume-wrapper {
+    max-width: 100%;
+    padding: 12px;
+  }
+  .hardcover-book {
+    width: min(315px, calc(100vw - 64px));
+    height: 480px;
+    padding: 26px 24px 22px 30px;
+    transform: rotateY(-8deg) rotateX(3deg);
+  }
+  .book-cover-logo {
+    width: 140px;
+    height: 140px;
+  }
+  .book-main-title {
+    font-size: 1rem;
+  }
+  .book-trust-label {
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+    text-align: left;
+  }
+
+  .editorial-section,
+  .acquisition-section {
+    padding: 72px 0;
+  }
+  .section-headline {
+    font-size: clamp(1.85rem, 8vw, 2.25rem);
+  }
+  .section-summary { font-size: 1rem; }
+  .intel-two-col,
+  .risk-matrix-layout {
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .intel-panel,
+  .risk-display-surface,
+  .practice-card,
+  .peer-review-card {
+    padding: 28px 22px;
+  }
+  .intel-panel-title { font-size: 1.25rem; }
+  .intel-panel-prose { font-size: 0.95rem; }
+  .risk-metrics-row { grid-template-columns: 1fr; }
+  .risk-nav-item { padding: 16px 18px; }
+  .risk-display-title { font-size: 1.45rem; }
+  .countermeasure-callout { padding: 22px 18px; }
+
+  .curriculum-grid,
+  .practice-grid,
+  .peer-reviews-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .module-card {
+    min-height: 220px;
+    padding: 26px 22px;
+  }
+  .practice-grid { margin-top: 40px; }
+
+  .acquisition-panel {
+    padding: 28px 20px;
+  }
+  .acq-status-banner {
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .acq-status-right {
+    width: 100%;
+    margin-left: 17px;
+  }
+  .acq-free { font-size: 3rem; }
+  .acq-strike { font-size: 1.65rem; }
+  .executive-form-box { padding: 24px 18px; }
+  .form-input,
+  .form-select {
+    font-size: 16px;
+  }
+
+  .reader-modal-overlay { padding: 12px; }
+  .reader-window { max-height: 92vh; }
+  .reader-top-bar { padding: 14px 16px; }
+  .reader-content-body { padding: 28px 20px; }
+
+  .site-footer { padding: 56px 0 32px; }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .footer-bottom-line {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .curriculum-grid, .practice-grid, .peer-reviews-grid { grid-template-columns: 1fr; }
-  .top-bar-right, .nav-links { display: none; }
-  .container { padding: 0 24px; }
-  .footer-grid { grid-template-columns: 1fr; }
-  .metric-stat-num { font-size: 1.2rem; }
   .hero-scroll-indicator { display: none; }
+}
+
+@media (max-width: 480px) {
+  .institutional-badge {
+    font-size: 0.62rem;
+  }
+  .brand-descriptor { display: none; }
+  .brand-name {
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+  }
+  .hero-title {
+    font-size: 1.9rem;
+  }
+  .monograph-label {
+    line-height: 1.5;
+  }
+  .hero-meta-strip strong {
+    width: 100%;
+  }
+  .hero-social-divider { display: none; }
+  .hero-social-proof {
+    flex-direction: column;
+  }
+  .hardcover-book {
+    width: min(280px, calc(100vw - 48px));
+    height: 430px;
+    padding: 22px 20px 18px 26px;
+  }
+  .book-embossed-crest {
+    font-size: 0.58rem;
+  }
+  .book-series-tag {
+    font-size: 0.58rem;
+  }
+  .book-main-title {
+    font-size: 0.82rem;
+  }
+  .book-cover-logo {
+    width: 120px;
+    height: 120px;
+  }
+  .book-authors-footer {
+    font-size: 0.62rem;
+  }
+  .book-publisher-text {
+    font-size: 0.58rem;
+  }
+  .section-eyebrow { font-size: 0.64rem; }
+  .section-headline {
+    font-size: 1.75rem;
+  }
+  .acq-price-row {
+    flex-wrap: wrap;
+  }
+  .acq-free { font-size: 2.75rem; }
 }
